@@ -1,0 +1,113 @@
+cabal-version:   3.0
+name:            cardano-dapp-haskell-template
+version:         0
+license:         BSD-3-Clause
+build-type:      Simple
+license-file:    LICENSE
+author:          kolam
+maintainer:      kolam <kolam@posteo.me>
+copyright:       2024 kolam
+tested-with:     GHC ==8.6.5 || ==8.8.3 || ==8.10.7 || ==9.0.2 || ==9.2.2
+extra-doc-files:
+  CHANGELOG.md
+  README.md
+
+-- category:
+-- description:     description
+-- synopsis:        one-line synopsis
+-- homepage:        https://github.com/FIXME/cardano-dapp-haskell-template#readme
+-- source-repository head
+--   type:     git
+--   location: git://github.com/FIXME/cardano-dapp-haskell-template.git
+
+common common-options
+  build-depends:    base >=4.9 && <5
+  default-language: Haskell2010
+  default-extensions:
+    ImportQualifiedPost
+  ghc-options:
+    -Wall -Wcompat -Widentities -Wincomplete-uni-patterns
+    -Wincomplete-record-updates -Wredundant-constraints
+    -fhide-source-paths -Wpartial-fields -Wmissing-import-lists
+
+library
+  import:          common-options
+  hs-source-dirs:  src
+  default-extensions:
+    NoImplicitPrelude
+  exposed-modules:
+    Lib
+    Run
+    AuctionValidator
+  -----------------------
+  -- CHaP dependencies
+  -----------------------
+  build-depends:
+    , plutus-ledger-api
+    , plutus-tx
+    , plutus-tx-plugin
+    , plutus-core
+
+  -----------------------
+  -- Hackage dependencies
+  -----------------------
+  build-depends:
+    , containers
+    , mtl
+    , base16-bytestring
+    , bytestring
+
+executable cardano-dapp-haskell-template-exe
+  import:         common-options
+  hs-source-dirs: app
+  main-is:        Main.hs
+  build-depends:  cardano-dapp-haskell-template
+  ghc-options:    -threaded -rtsopts -with-rtsopts=-N
+
+test-suite cardano-dapp-haskell-template-test
+  import:         common-options
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is:        Driver.hs
+  build-tool-depends:
+    tasty-discover:tasty-discover
+  other-modules:
+    Spec
+  -----------------------
+  -- Local dependencies
+  -----------------------
+  build-depends:
+    , cardano-dapp-haskell-template
+
+  -----------------------
+  -- CHaP dependencies
+  -----------------------
+  build-depends:
+    , cardano-api
+    , cardano-testnet
+    , hedgehog-extras
+
+  -----------------------
+  -- Hackage dependencies
+  -----------------------
+  build-depends:
+    , tasty
+    , hedgehog
+    , tasty-hedgehog
+    , tasty-discover
+    , directory
+    , filepath
+    , resourcet
+
+  ghc-options:    -threaded -rtsopts -with-rtsopts=-N
+
+benchmark cardano-dapp-haskell-template-bench
+  import:         common-options
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: bench
+  main-is:        Main.hs
+  build-depends:
+    , criterion
+    , cardano-dapp-haskell-template
+
+  ghc-options:    -threaded -rtsopts -with-rtsopts=-N
